@@ -45,6 +45,7 @@ directLight.shadow.camera.far = 150;
 const ambientLight = new THREE.AmbientLight(0x333333);
 scene.add(ambientLight);
 
+
 // set sun
 
 let sun;
@@ -126,11 +127,21 @@ Array(1000).fill().forEach(addStars);
 
 // set character
 
+// CHECK THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+controls = new THREE.OrbitControls(camera);
+controls.addEventListener( 'change', light_update );
+
+// function light_update()
+// {
+//     light.position.copy( camera.position );
+// }
+
 // Declare character position and movement speed
 let characterPosition = new THREE.Vector3(0, 0, 300);
 const movementSpeed = 0.5;
 
-let mixer;
+let character;
 
 const loader = new FBXLoader();
 loader.load("./objects/character.fbx", (fbx) => 
@@ -143,8 +154,8 @@ loader.load("./objects/character.fbx", (fbx) =>
   const animLoader = new FBXLoader();
   animLoader.load("./objects/floating.fbx", (animationData) => 
   {
-    mixer = new THREE.AnimationMixer(fbx);
-    const idle = mixer.clipAction(animationData.animations[0]);
+    character = new THREE.AnimationMixer(fbx);
+    const idle = character.clipAction(animationData.animations[0]);
     idle.play();
   });
 
@@ -187,9 +198,10 @@ function animate() {
   requestAnimationFrame(animate)
 
   // animation character
-  if(mixer) 
+  if(character) 
   {
-    mixer.update(0.01);
+    character.update(0.01);
+    light.position.copy( camera.position );
   }
 
   // animation sun
