@@ -322,6 +322,12 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 
+// Declare character position and movement speed
+let characterPosition = new THREE.Vector3(0, 0, 0);
+const movementSpeed = 0.4; // Adjust the movement speed as needed
+
+// creating scene
+
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -330,13 +336,16 @@ const camera = new THREE.PerspectiveCamera(
   1000
 )
 
+// creating renderer
+
 const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
+// CAMERA
+
 const controls = new OrbitControls(camera, renderer.domElement)
 
-// CAMERA
 camera.position.z = 5
 
 // lights
@@ -368,8 +377,38 @@ loader.load("./objects/character.fbx", (fbx) =>
     idle.play();
   });
 
+  // Change the position and rotation of the character
+  fbx.rotation.set(0, Math.PI, 0);
+
   scene.add(fbx);
+
+  document.addEventListener("keydown", (event) => {
+    // Left arrow key (key code: 37)
+    if (event.key === "ArrowLeft") {
+      characterPosition.x -= movementSpeed;
+      fbx.rotation.set(0, -Math.PI / 2, 0); // Turn left
+    }
+    // Right arrow key (key code: 39)
+    else if (event.key === "ArrowRight") {
+      characterPosition.x += movementSpeed;
+      fbx.rotation.set(0, Math.PI / 2, 0); // Turn right
+    }
+    // Up arrow key (key code: 38)
+    else if (event.key === "ArrowUp") {
+      fbx.rotation.set(0, Math.PI, 0); // Face forward
+    }
+    else if (event.key === "ArrowDown") {
+      fbx.rotation.set(0, 0, 0); // Face backwards
+    }
+
+    // Update character's position
+    fbx.position.copy(characterPosition);
+  });
 });
+
+
+
+
 
 
 // Create an array to store the star objects
@@ -381,7 +420,15 @@ function addStars() {
   const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
   const star = new THREE.Mesh(geometry, material);
 
-  const [x, y, z] = Array(3).fill().map(() => THREE.MathUtils.randFloatSpread(500));
+  const sideX = Math.random() < 0.5 ? -1 : 1;
+  const sideY = Math.random() < 0.5 ? -1 : 1;
+  const sideZ = Math.random() < 0.5 ? -1 : 1;
+
+  const [x, y, z] = [
+    THREE.MathUtils.randFloatSpread(500) * sideX,
+    THREE.MathUtils.randFloatSpread(500) * sideY,
+    THREE.MathUtils.randFloatSpread(500) * sideZ
+  ];
 
   star.position.set(x, y, z);
   scene.add(star);
@@ -389,7 +436,7 @@ function addStars() {
   stars.push(star); // Add star to the array
 }
 
-Array(300).fill().forEach(addStars);
+Array(1000).fill().forEach(addStars);
 
 
 function animate() {
@@ -404,11 +451,11 @@ function animate() {
   stars.forEach(star => {
     const speed = 0.1; // Adjust the speed as needed
     star.position.z += speed;
-    if (star.position.z < -100) {
+    if (star.position.z < -400) {
       // Reset star's position if it goes too far
       star.position.set(
-        THREE.MathUtils.randFloatSpread(500),
-        THREE.MathUtils.randFloatSpread(500),
+        THREE.MathUtils.randFloatSpread(1000),
+        THREE.MathUtils.randFloatSpread(1000),
         100
       );
     }
