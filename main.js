@@ -27,12 +27,23 @@ camera.position.z = 5
 
 // lights
 
-const directLight = new THREE.DirectionalLight(0xffffff, 0.8);
-scene.add(directLight)
+// sun light
+const sunIntensity = 1.2;
+const sunColor = 0xffeedd; 
 
+const directLight = new THREE.DirectionalLight(sunColor, sunIntensity);
+directLight.position.set(-1, 1, -1);
+scene.add(directLight);
+
+directLight.castShadow = true;
+directLight.shadow.mapSize.width = 1024;
+directLight.shadow.mapSize.height = 1024;
+directLight.shadow.camera.near = 0.5;
+directLight.shadow.camera.far = 150;
+
+// ambient light
 const ambientLight = new THREE.AmbientLight(0x333333);
-scene.add(ambientLight)
-
+scene.add(ambientLight);
 
 // set sun
 
@@ -45,8 +56,8 @@ gltfSun.load("./objects/sun/sun.gltf", (gltf) =>
   sun = gltf;
 
   sun.scene.position.y = 50;
-  sun.scene.position.x = -450;
-  sun.scene.position.z = -400;
+  sun.scene.position.x = -400;
+  sun.scene.position.z = -150;
   sun.scene.scale.set(7, 7, 7)
 
   scene.add(gltf.scene);
@@ -213,6 +224,8 @@ function animate() {
   // Move asteroids forward along their current direction
   asteroids.forEach(asteroid => {
     asteroid.position.z += asteroidSpeed;
+    asteroid.rotation.x += 0.005;
+    asteroid.rotation.y += 0.005;
     if (asteroid.position.z > 500) {
       // Reset asteroid's position if it goes too far
       asteroid.position.set(
