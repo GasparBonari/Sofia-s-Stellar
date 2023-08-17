@@ -3,10 +3,6 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// Declare character position and movement speed
-let characterPosition = new THREE.Vector3(0, 0, 0);
-const movementSpeed = 0.4; // Adjust the movement speed as needed
-
 // creating scene
 
 const scene = new THREE.Scene()
@@ -73,7 +69,7 @@ gltfAsteroid.load("./objects/asteroid/asteroid.gltf", (gltf1) =>
   asteroid.scene.scale.set(0.05, 0.05, 0.05);
 
   // Create multiple instances of the asteroid
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 100; i++) {
     const clonedAsteroid = gltf1.scene.clone();
     // Set random positions within the range of stars
     const [x, y, z] = [
@@ -110,7 +106,7 @@ function addStars() {
   star.position.set(x, y, z);
   scene.add(star);
 
-  stars.push(star); // Add star to the array
+  stars.push(star);
 }
 
 Array(1000).fill().forEach(addStars);
@@ -118,6 +114,10 @@ Array(1000).fill().forEach(addStars);
 
 
 // set character
+
+// Declare character position and movement speed
+let characterPosition = new THREE.Vector3(0, 0, 300);
+const movementSpeed = 0.5;
 
 let mixer;
 
@@ -138,22 +138,24 @@ loader.load("./objects/character.fbx", (fbx) =>
   });
 
   // Change the position and rotation of the character
+  fbx.position.set(0, 0, 300);
   fbx.rotation.set(0, Math.PI, 0);
+
+  // Copy character position to camera position
+  camera.position.copy(characterPosition);
 
   scene.add(fbx);
 
   document.addEventListener("keydown", (event) => {
-    // Left arrow key (key code: 37)
+
     if (event.key === "ArrowLeft") {
       characterPosition.x -= movementSpeed;
       fbx.rotation.set(0, -Math.PI / 2, 0); // Turn left
     }
-    // Right arrow key (key code: 39)
     else if (event.key === "ArrowRight") {
       characterPosition.x += movementSpeed;
       fbx.rotation.set(0, Math.PI / 2, 0); // Turn right
     }
-    // Up arrow key (key code: 38)
     else if (event.key === "ArrowUp") {
       fbx.rotation.set(0, Math.PI, 0); // Face forward
     }
@@ -164,6 +166,7 @@ loader.load("./objects/character.fbx", (fbx) =>
     // Update character's position
     fbx.position.copy(characterPosition);
   });
+
 });
 
 
@@ -188,7 +191,7 @@ function animate() {
   stars.forEach(star => {
     const speed = 0.1; // Adjust the speed as needed
     star.position.z += speed;
-    if (star.position.z < -400) {
+    if (star.position.z < -1000) {
       // Reset star's position if it goes too far
       star.position.set(
         THREE.MathUtils.randFloatSpread(1000),
@@ -200,7 +203,7 @@ function animate() {
 
   // Remove stars that are too far from the camera
   for (let i = stars.length - 1; i >= 0; i--) {
-    if (stars[i].position.z > 100) {
+    if (stars[i].position.z > 500) {
       scene.remove(stars[i]);
       stars.splice(i, 1);
       addStars(); // Add new star
@@ -210,7 +213,7 @@ function animate() {
   // Move asteroids forward along their current direction
   asteroids.forEach(asteroid => {
     asteroid.position.z += asteroidSpeed;
-    if (asteroid.position.z > 100) {
+    if (asteroid.position.z > 500) {
       // Reset asteroid's position if it goes too far
       asteroid.position.set(
         THREE.MathUtils.randFloatSpread(500),
