@@ -42,19 +42,78 @@ scene.add(ambientLight)
 
 let sun;
 
-const gltfLoader = new GLTFLoader();
+const gltfSun = new GLTFLoader();
 
-gltfLoader.load("./objects/sun.gltf", (gltf) => 
+gltfSun.load("./objects/sun/sun.gltf", (gltf) => 
 {
   sun = gltf;
 
   sun.scene.position.y = 50;
   sun.scene.position.x = -450;
   sun.scene.position.z = -400;
-  gltf.scene.scale.set(7, 7, 7)
+  sun.scene.scale.set(7, 7, 7)
 
   scene.add(gltf.scene);
 })
+
+
+// set asteroids
+
+let asteroids = [];
+let asteroid;
+
+const asteroidSpeed = 0.4;
+
+const gltfAsteroid = new GLTFLoader();
+
+gltfAsteroid.load("./objects/asteroid/asteroid.gltf", (gltf1) => 
+{
+  asteroid = gltf1;
+
+  asteroid.scene.scale.set(0.05, 0.05, 0.05);
+
+  // Create multiple instances of the asteroid
+  for (let i = 0; i < 10; i++) {
+    const clonedAsteroid = gltf1.scene.clone();
+    // Set random positions within the range of stars
+    const [x, y, z] = [
+      THREE.MathUtils.randFloatSpread(500),
+      THREE.MathUtils.randFloatSpread(500),
+      THREE.MathUtils.randFloatSpread(500)
+    ];
+    clonedAsteroid.position.set(x, y, z);
+    scene.add(clonedAsteroid);
+    asteroids.push(clonedAsteroid);
+  }
+});
+
+
+// Add stars
+
+const stars = [];
+
+function addStars() {
+  const geometry = new THREE.SphereGeometry(0.25, 24, 24);
+  const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const star = new THREE.Mesh(geometry, material);
+
+  const sideX = Math.random() < 0.5 ? -1 : 1;
+  const sideY = Math.random() < 0.5 ? -1 : 1;
+  const sideZ = Math.random() < 0.5 ? -1 : 1;
+
+  const [x, y, z] = [
+    THREE.MathUtils.randFloatSpread(500) * sideX,
+    THREE.MathUtils.randFloatSpread(500) * sideY,
+    THREE.MathUtils.randFloatSpread(500) * sideZ
+  ];
+
+  star.position.set(x, y, z);
+  scene.add(star);
+
+  stars.push(star); // Add star to the array
+}
+
+Array(1000).fill().forEach(addStars);
 
 
 
@@ -108,37 +167,7 @@ loader.load("./objects/character.fbx", (fbx) =>
 });
 
 
-
-
-
-
-// Create an array to store the star objects
-const stars = [];
-
-// Add stars
-function addStars() {
-  const geometry = new THREE.SphereGeometry(0.25, 24, 24);
-  const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
-  const star = new THREE.Mesh(geometry, material);
-
-  const sideX = Math.random() < 0.5 ? -1 : 1;
-  const sideY = Math.random() < 0.5 ? -1 : 1;
-  const sideZ = Math.random() < 0.5 ? -1 : 1;
-
-  const [x, y, z] = [
-    THREE.MathUtils.randFloatSpread(500) * sideX,
-    THREE.MathUtils.randFloatSpread(500) * sideY,
-    THREE.MathUtils.randFloatSpread(500) * sideZ
-  ];
-
-  star.position.set(x, y, z);
-  scene.add(star);
-
-  stars.push(star); // Add star to the array
-}
-
-Array(1000).fill().forEach(addStars);
-
+// animation
 
 function animate() {
   requestAnimationFrame(animate)
@@ -169,7 +198,7 @@ function animate() {
     }
   });
 
- // Remove stars that are too far from the camera
+  // Remove stars that are too far from the camera
   for (let i = stars.length - 1; i >= 0; i--) {
     if (stars[i].position.z > 100) {
       scene.remove(stars[i]);
@@ -177,6 +206,19 @@ function animate() {
       addStars(); // Add new star
     }
   }
+
+  // Move asteroids forward along their current direction
+  asteroids.forEach(asteroid => {
+    asteroid.position.z += asteroidSpeed;
+    if (asteroid.position.z > 100) {
+      // Reset asteroid's position if it goes too far
+      asteroid.position.set(
+        THREE.MathUtils.randFloatSpread(500),
+        THREE.MathUtils.randFloatSpread(500),
+        THREE.MathUtils.randFloatSpread(500)
+      );
+    }
+  });
 
   renderer.render(scene, camera);
 }
