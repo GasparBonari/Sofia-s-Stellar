@@ -6,13 +6,6 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 // CREATE SCENE
 
 const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-)
-
 
 // CREATE RENDERER
 
@@ -23,9 +16,16 @@ document.body.appendChild(renderer.domElement)
 
 // CAMERA
 
-const controls = new OrbitControls(camera, renderer.domElement)
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+)
 
 camera.position.z = 5
+
+const controls = new OrbitControls(camera, renderer.domElement)
 
 
 // LIGHTS
@@ -55,7 +55,7 @@ let angle = Math.PI / 4;
 let penumbra = 1;
 let decay = 1.0;
 
-const lightC = new THREE.SpotLight(sunColor, 100, distance, angle, penumbra, decay);
+const lightC = new THREE.SpotLight(sunColor, 200, distance, angle, penumbra, decay);
 lightC.position.set(0, 10, 340);
 lightC.castShadow = true;
 scene.add(lightC);
@@ -212,6 +212,11 @@ function animate() {
   {
     character.update(0.01);
     lightC.position.copy(characterPosition.clone().add(new THREE.Vector3(0, 10, 40)));
+
+    // Update camera's position to follow the character
+    const cameraOffset = new THREE.Vector3(0, 15, 20);
+    const cameraPosition = characterPosition.clone().add(cameraOffset);
+    camera.position.copy(cameraPosition);
   }
 
   // animation sun
