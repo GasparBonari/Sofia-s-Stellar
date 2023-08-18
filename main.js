@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-// creating scene
+// CREATE SCENE
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(
@@ -13,11 +13,13 @@ const camera = new THREE.PerspectiveCamera(
   1000
 )
 
-// creating renderer
+
+// CREATE RENDERER
 
 const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
+
 
 // CAMERA
 
@@ -25,7 +27,8 @@ const controls = new OrbitControls(camera, renderer.domElement)
 
 camera.position.z = 5
 
-// lights
+
+// LIGHTS
 
 // sun light
 const sunIntensity = 1.2;
@@ -46,7 +49,23 @@ const ambientLight = new THREE.AmbientLight(0x333333);
 scene.add(ambientLight);
 
 
-// set sun
+// spot light for character
+let distance = 50;
+let angle = Math.PI / 4;
+let penumbra = 1;
+let decay = 1.0;
+
+const lightC = new THREE.SpotLight(sunColor, 100, distance, angle, penumbra, decay);
+lightC.position.set(0, 10, 340);
+lightC.castShadow = true;
+scene.add(lightC);
+
+// spot light helper
+const lightHelper = new THREE.SpotLightHelper(lightC);
+scene.add(lightHelper);
+
+
+// SET SUN
 
 let sun;
 
@@ -65,7 +84,7 @@ gltfSun.load("./objects/sun/sun.gltf", (gltf) =>
 })
 
 
-// set asteroids
+// SET ASTEROIDS
 
 let asteroids = [];
 let asteroid;
@@ -96,7 +115,7 @@ gltfAsteroid.load("./objects/asteroid/asteroid.gltf", (gltf1) =>
 });
 
 
-// Add stars
+// SET STARS
 
 const stars = [];
 
@@ -125,17 +144,7 @@ Array(1000).fill().forEach(addStars);
 
 
 
-// set character
-
-// CHECK THIS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-controls = new THREE.OrbitControls(camera);
-controls.addEventListener( 'change', light_update );
-
-// function light_update()
-// {
-//     light.position.copy( camera.position );
-// }
+// SET CHARACTER
 
 // Declare character position and movement speed
 let characterPosition = new THREE.Vector3(0, 0, 300);
@@ -149,6 +158,7 @@ loader.load("./objects/character.fbx", (fbx) =>
   fbx.scale.setScalar(0.1);
   fbx.traverse(e => {
     e.castShadow = true;
+    e.receiveShadow = true;
   });
 
   const animLoader = new FBXLoader();
@@ -192,7 +202,7 @@ loader.load("./objects/character.fbx", (fbx) =>
 });
 
 
-// animation
+// ANIMATION
 
 function animate() {
   requestAnimationFrame(animate)
@@ -201,7 +211,7 @@ function animate() {
   if(character) 
   {
     character.update(0.01);
-    light.position.copy( camera.position );
+    lightC.position.copy(characterPosition.clone().add(new THREE.Vector3(0, 10, 40)));
   }
 
   // animation sun
@@ -247,6 +257,9 @@ function animate() {
       );
     }
   });
+
+  // Update light helper positions
+  lightHelper.update();
 
   renderer.render(scene, camera);
 }
