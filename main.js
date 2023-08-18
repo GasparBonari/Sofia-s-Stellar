@@ -51,7 +51,7 @@ scene.add(ambientLight);
 
 // spot light for character
 let distance = 50;
-let angle = Math.PI / 4;
+let angle = Math.PI / 6;
 let penumbra = 1;
 let decay = 1.0;
 
@@ -180,19 +180,26 @@ loader.load("./objects/character.fbx", (fbx) =>
 
   document.addEventListener("keydown", (event) => {
 
-    if (event.key === "ArrowLeft") {
-      characterPosition.x -= movementSpeed;
-      fbx.rotation.set(0, -Math.PI / 2, 0); // Turn left
-    }
-    else if (event.key === "ArrowRight") {
-      characterPosition.x += movementSpeed;
-      fbx.rotation.set(0, Math.PI / 2, 0); // Turn right
-    }
-    else if (event.key === "ArrowUp") {
-      fbx.rotation.set(0, Math.PI, 0); // Face forward
-    }
-    else if (event.key === "ArrowDown") {
-      fbx.rotation.set(0, 0, 0); // Face backwards
+    const minX = -100; // Minimum x-axis boundary
+    const maxX = 100;  // Maximum x-axis boundary
+
+    if (event.key === "ArrowLeft") 
+    {
+      characterPosition.x = Math.max(characterPosition.x - movementSpeed, minX);
+      fbx.rotation.set(0, -Math.PI / 2, 0);
+    } 
+    else if (event.key === "ArrowRight") 
+    {
+      characterPosition.x = Math.min(characterPosition.x + movementSpeed, maxX);
+      fbx.rotation.set(0, Math.PI / 2, 0);
+    } 
+    else if (event.key === "ArrowUp") 
+    {
+      fbx.rotation.set(0, Math.PI, 0);
+    } 
+    else if (event.key === "ArrowDown") 
+    {
+      fbx.rotation.set(0, 0, 0);
     }
 
     // Update character's position
