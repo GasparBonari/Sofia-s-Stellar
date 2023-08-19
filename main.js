@@ -161,8 +161,9 @@ loader.load("./objects/character.fbx", (fbx) =>
     e.receiveShadow = true;
   });
 
-  const animLoader = new FBXLoader();
-  animLoader.load("./objects/floating.fbx", (animationData) => 
+  // flaoting animation
+  const animLoaderFloating = new FBXLoader();
+  animLoaderFloating.load("./objects/floating.fbx", (animationData) => 
   {
     character = new THREE.AnimationMixer(fbx);
     const idle = character.clipAction(animationData.animations[0]);
@@ -207,6 +208,21 @@ loader.load("./objects/character.fbx", (fbx) =>
   });
 
 });
+
+
+// Collision
+
+function checkCollisions() {
+  const characterSphere = new THREE.Sphere(characterPosition, 9);
+  
+  asteroids.forEach(asteroid => {
+    const asteroidSphere = new THREE.Sphere(asteroid.position, 4);
+
+    if (characterSphere.intersectsSphere(asteroidSphere)) {
+      console.log("Collision detected");
+    }
+  });
+}
 
 
 // ANIMATION
@@ -269,6 +285,9 @@ function animate() {
       );
     }
   });
+  
+  // Call collision detection function
+  checkCollisions();
 
   // Update light helper positions
   lightHelper.update();
