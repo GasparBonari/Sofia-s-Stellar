@@ -220,7 +220,6 @@ loader.load("./objects/character.fbx", (fbx) =>
 
 });
 
-
 // ANIMATION
 
 function animate() {
@@ -239,6 +238,18 @@ function animate() {
     // Calculate the updated position for the box
     const updatedBoxPosition = characterPosition.clone().add(offset);
     characterCollisionSphereMesh.position.copy(updatedBoxPosition);
+
+    // Create a bounding box for the character's collision sphere
+    const characterBoundingBox = new THREE.Box3().setFromObject(characterCollisionSphereMesh);
+
+    // Check for collision with asteroids
+    asteroids.forEach(asteroid => {
+      const asteroidBoundingBox = new THREE.Box3().setFromObject(asteroid);
+
+      if (characterBoundingBox.intersectsBox(asteroidBoundingBox)) {
+        console.log("Collision detected");
+      }
+    });
   }
 
   // animation sun
