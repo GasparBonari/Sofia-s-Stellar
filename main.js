@@ -148,9 +148,12 @@ Array(1000).fill().forEach(addStars);
 
 // Declare character position and movement speed
 let characterPosition = new THREE.Vector3(0, 0, 300);
-const movementSpeed = 0.5;
+const initialBoxPosition = new THREE.Vector3(0, 12, 300);
+const offset = initialBoxPosition.clone().sub(characterPosition);
+const movementSpeed = 1.5;
 
 let character;
+let characterCollisionSphereMesh;
 
 const loader = new FBXLoader();
 loader.load("./objects/character.fbx", (fbx) => 
@@ -178,6 +181,14 @@ loader.load("./objects/character.fbx", (fbx) =>
   camera.position.copy(characterPosition);
 
   scene.add(fbx);
+
+  // Create a geometry for the collision sphere visualization
+  const characterCollisionGeometry = new THREE.BoxGeometry(7, 15, 8);  
+  const characterCollisionMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+  characterCollisionSphereMesh = new THREE.Mesh(characterCollisionGeometry, characterCollisionMaterial);
+
+  characterCollisionSphereMesh.position.set(0, 12, 300);
+  scene.add(characterCollisionSphereMesh);
 
   document.addEventListener("keydown", (event) => {
 
@@ -210,25 +221,9 @@ loader.load("./objects/character.fbx", (fbx) =>
 });
 
 
-// Collision
-
-function checkCollisions() {
-  const characterSphere = new THREE.Sphere(characterPosition, 9);
-  
-  asteroids.forEach(asteroid => {
-    const asteroidSphere = new THREE.Sphere(asteroid.position, 4);
-
-    if (characterSphere.intersectsSphere(asteroidSphere)) {
-      console.log("Collision detected");
-    }
-  });
-}
-
-
 // ANIMATION
 
 function animate() {
-  requestAnimationFrame(animate)
 
   // animation character
   if(character) 
@@ -240,6 +235,10 @@ function animate() {
     const cameraOffset = new THREE.Vector3(0, 15, 20);
     const cameraPosition = characterPosition.clone().add(cameraOffset);
     camera.position.copy(cameraPosition);
+
+    // Calculate the updated position for the box
+    const updatedBoxPosition = characterPosition.clone().add(offset);
+    characterCollisionSphereMesh.position.copy(updatedBoxPosition);
   }
 
   // animation sun
@@ -285,14 +284,12 @@ function animate() {
       );
     }
   });
-  
-  // Call collision detection function
-  checkCollisions();
 
   // Update light helper positions
   lightHelper.update();
 
   renderer.render(scene, camera);
+  requestAnimationFrame(animate)
 }
 
 animate();
