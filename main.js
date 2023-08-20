@@ -222,6 +222,8 @@ loader.load("./objects/character.fbx", (fbx) =>
 
 // ANIMATION
 
+let collisionDetected = false;
+
 function animate() {
 
   // animation character
@@ -248,8 +250,17 @@ function animate() {
 
       if (characterBoundingBox.intersectsBox(asteroidBoundingBox)) {
         console.log("Collision detected");
+        collisionDetected = true;
       }
     });
+  }
+
+  if (collisionDetected) {
+
+    characterPosition.z -= 10;
+    camera.position.z -= 10;
+    
+    collisionDetected = false;
   }
 
   // animation sun
