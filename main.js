@@ -262,6 +262,7 @@ loader.load("./objects/character.fbx", (fbx) =>
 // ANIMATION
 
 let collisionDetected = false;
+let progressBarWidth = 100;
 
 function animate() {
 
@@ -282,6 +283,30 @@ function animate() {
 
     // Create a bounding box for the character's collision sphere
     const characterBoundingBox = new THREE.Box3().setFromObject(characterCollisionSphereMesh);
+
+
+     // Iterate through oxigen objects to check for intersections
+    for (let i = oxigens.length - 1; i >= 0; i--) {
+      const oxigen = oxigens[i];
+      const oxigenBoundingBox = new THREE.Box3().setFromObject(oxigen);
+
+      if (characterBoundingBox.intersectsBox(oxigenBoundingBox)) {
+        console.log("Character intersects with an oxigen object");
+        
+        progressBarWidth = 100;
+        scene.remove(oxigen);
+        oxigens.splice(i, 1);
+      }
+    }
+
+    if (progressBarWidth > 0) {
+      progressBarWidth -= 0.01; // Adjust the rate of decrease as needed
+      const progressBar = document.getElementById("progress-bar");
+      progressBar.style.width = progressBarWidth + "%";
+    } else {
+      // Handle the progress bar reaching zero
+    }
+
 
     // Check for collision with asteroids
     asteroids.forEach(asteroid => {
