@@ -231,6 +231,8 @@ loader.load("./objects/character.fbx", (fbx) =>
 
     const minX = -100; // Minimum x-axis boundary
     const maxX = 100;  // Maximum x-axis boundary
+    const minY = -100;    // Minimum y-axis boundary (floor)
+    const maxY = 100;  // Maximum y-axis boundary (ceiling)
 
     if (event.key === "ArrowLeft") 
     {
@@ -244,11 +246,11 @@ loader.load("./objects/character.fbx", (fbx) =>
     } 
     else if (event.key === "ArrowUp") 
     {
-      fbx.rotation.set(0, Math.PI, 0);
+      characterPosition.y = Math.min(characterPosition.y + movementSpeed, maxY);
     } 
     else if (event.key === "ArrowDown") 
     {
-      fbx.rotation.set(0, 0, 0);
+      characterPosition.y = Math.max(characterPosition.y - movementSpeed, minY);
     }
 
     // Update character's position
