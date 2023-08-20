@@ -44,11 +44,6 @@ directLight.shadow.mapSize.height = 1024;
 directLight.shadow.camera.near = 0.5;
 directLight.shadow.camera.far = 150;
 
-// ambient light
-const ambientLight = new THREE.AmbientLight(0x333333);
-scene.add(ambientLight);
-
-
 // spot light for character
 let distance = 50;
 let angle = Math.PI / 6;
@@ -111,6 +106,48 @@ gltfAsteroid.load("./objects/asteroid/asteroid.gltf", (gltf1) =>
     clonedAsteroid.position.set(x, y, z);
     scene.add(clonedAsteroid);
     asteroids.push(clonedAsteroid);
+  }
+});
+
+
+// SET OXIGEN
+
+let oxigens = [];
+let oxigen;
+
+const gltfNewObject = new GLTFLoader();
+
+gltfNewObject.load("./objects/oxigen/oxigen.gltf", (gltf2) => 
+{
+  oxigen = gltf2;
+
+  oxigen.scene.scale.set(0.02, 0.02, 0.02);
+
+  // Create multiple instances of the new object
+  for (let i = 0; i < 30; i++) {
+    const clonedOxigen = gltf2.scene.clone();
+    // Set random positions within the range of stars
+    const [x, y, z] = [
+      THREE.MathUtils.randFloatSpread(300),
+      THREE.MathUtils.randFloatSpread(500),
+      THREE.MathUtils.randFloatSpread(700)
+    ];
+    clonedOxigen.position.set(x, y, z);
+
+    // Update the material to use MeshStandardMaterial
+    clonedOxigen.traverse(child => {
+      if (child.isMesh) {
+        child.material = new THREE.MeshStandardMaterial({
+          map: child.material.map,
+          color: 0xadd8e6,
+          roughness: 0.1,
+          metalness: 0.5,
+        });
+      }
+    });
+
+    scene.add(clonedOxigen);
+    oxigens.push(clonedOxigen);
   }
 });
 
@@ -269,7 +306,7 @@ function animate() {
     sun.scene.rotation.x += 0.001;
   }
 
-  // Move stars forward along their current direction
+  // Move stars
   stars.forEach(star => {
     const speed = 0.1; // Adjust the speed as needed
     star.position.z += speed;
@@ -292,7 +329,7 @@ function animate() {
     }
   }
 
-  // Move asteroids forward along their current direction
+  // Move asteroids
   asteroids.forEach(asteroid => {
     asteroid.position.z += asteroidSpeed;
     asteroid.rotation.x += 0.005;
@@ -300,6 +337,21 @@ function animate() {
     if (asteroid.position.z > 500) {
       // Reset asteroid's position if it goes too far
       asteroid.position.set(
+        THREE.MathUtils.randFloatSpread(500),
+        THREE.MathUtils.randFloatSpread(500),
+        THREE.MathUtils.randFloatSpread(500)
+      );
+    }
+  });
+
+  // Move oxigens
+  oxigens.forEach(oxigen => {
+    oxigen.position.z += asteroidSpeed;
+    oxigen.rotation.x += 0.005;
+    oxigen.rotation.y += 0.005;
+    if (oxigen.position.z > 500) {
+      // Reset object's position if it goes too far
+      oxigen.position.set(
         THREE.MathUtils.randFloatSpread(500),
         THREE.MathUtils.randFloatSpread(500),
         THREE.MathUtils.randFloatSpread(500)
