@@ -24,7 +24,6 @@ const camera = new THREE.PerspectiveCamera(
 )
 
 camera.position.z = 5
-
 const controls = new OrbitControls(camera, renderer.domElement)
 
 
@@ -247,10 +246,12 @@ loader.load("./objects/character.fbx", (fbx) =>
     else if (event.key === "ArrowUp") 
     {
       characterPosition.y = Math.min(characterPosition.y + movementSpeed, maxY);
+      fbx.rotation.set(0, Math.PI, 0);
     } 
     else if (event.key === "ArrowDown") 
     {
       characterPosition.y = Math.max(characterPosition.y - movementSpeed, minY);
+      fbx.rotation.set(0, Math.PI, 0);
     }
 
     // Update character's position
