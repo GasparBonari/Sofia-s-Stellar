@@ -190,6 +190,7 @@ const movementSpeed = 1.5;
 
 let character;
 let characterCollisionSphereMesh;
+let keysBlocked = false;
 
 const loader = new FBXLoader();
 loader.load("./objects/character.fbx", (fbx) => 
@@ -227,35 +228,30 @@ loader.load("./objects/character.fbx", (fbx) =>
   scene.add(characterCollisionSphereMesh);
 
   document.addEventListener("keydown", (event) => {
-
-    const minX = -100; // Minimum x-axis boundary
-    const maxX = 100;  // Maximum x-axis boundary
-    const minY = -100;    // Minimum y-axis boundary (floor)
-    const maxY = 100;  // Maximum y-axis boundary (ceiling)
-
-    if (event.key === "ArrowLeft") 
+    if(!keysBlocked) 
     {
-      characterPosition.x = Math.max(characterPosition.x - movementSpeed, minX);
-      fbx.rotation.set(0, -Math.PI / 2, 0);
-    } 
-    else if (event.key === "ArrowRight") 
-    {
-      characterPosition.x = Math.min(characterPosition.x + movementSpeed, maxX);
-      fbx.rotation.set(0, Math.PI / 2, 0);
-    } 
-    else if (event.key === "ArrowUp") 
-    {
-      characterPosition.y = Math.min(characterPosition.y + movementSpeed, maxY);
-      fbx.rotation.set(0, Math.PI, 0);
-    } 
-    else if (event.key === "ArrowDown") 
-    {
-      characterPosition.y = Math.max(characterPosition.y - movementSpeed, minY);
-      fbx.rotation.set(0, Math.PI, 0);
+      const minX = -100; // Minimum x-axis boundary
+      const maxX = 100;  // Maximum x-axis boundary
+      const minY = -100; // Minimum y-axis boundary (floor)
+      const maxY = 100;  // Maximum y-axis boundary (ceiling)
+  
+      if (event.key === "ArrowLeft") {
+        characterPosition.x = Math.max(characterPosition.x - movementSpeed, minX);
+        fbx.rotation.set(0, -Math.PI / 2, 0);
+      } else if (event.key === "ArrowRight") {
+        characterPosition.x = Math.min(characterPosition.x + movementSpeed, maxX);
+        fbx.rotation.set(0, Math.PI / 2, 0);
+      } else if (event.key === "ArrowUp") {
+        characterPosition.y = Math.min(characterPosition.y + movementSpeed, maxY);
+        fbx.rotation.set(0, Math.PI, 0);
+      } else if (event.key === "ArrowDown") {
+        characterPosition.y = Math.max(characterPosition.y - movementSpeed, minY);
+        fbx.rotation.set(0, Math.PI, 0);
+      }
+  
+      // Update character's position
+      fbx.position.copy(characterPosition);
     }
-
-    // Update character's position
-    fbx.position.copy(characterPosition);
   });
 
 });
@@ -264,6 +260,8 @@ loader.load("./objects/character.fbx", (fbx) =>
 
 let collisionDetected = false;
 let progressBarWidth = 100;
+let gameOver = false;
+let gameLoop;
 
 function animate() {
 
@@ -305,7 +303,7 @@ function animate() {
       const progressBar = document.getElementById("progress-bar");
       progressBar.style.width = progressBarWidth + "%";
     } else {
-      // Handle the progress bar reaching zero
+      gameOver = true;
     }
 
 
@@ -314,8 +312,19 @@ function animate() {
       const asteroidBoundingBox = new THREE.Box3().setFromObject(asteroid);
 
       if (characterBoundingBox.intersectsBox(asteroidBoundingBox)) {
+        keysBlocked = true;
         console.log("Collision detected");
-        collisionDetected = true;
+
+        if (!gameOver) 
+        {
+          characterPosition.z -= 10;
+          camera.position.z -= 10;
+
+          setTimeout(() => {
+            gameOver = true;
+            cancelAnimationFrame(gameLoop);
+          }, 500); 
+        }
       }
     });
   }
@@ -326,6 +335,10 @@ function animate() {
     camera.position.z -= 10;
     
     collisionDetected = false;
+  }
+
+  if (gameOver) {
+    return;
   }
 
   // animation sun
@@ -391,7 +404,7 @@ function animate() {
   lightHelper.update();
 
   renderer.render(scene, camera);
-  requestAnimationFrame(animate)
+  gameLoop = requestAnimationFrame(animate);
 }
 
 animate();
