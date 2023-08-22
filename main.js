@@ -7,6 +7,9 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 // Selectors
 
 const oxygenBar = document.getElementById("oxygen-bar");
+const btnStart = document.querySelector("#btn-start");
+const startScreen = document.querySelector("#start-screen");
+const loadingScreen = document.querySelector("#loading-screen");
 
 let gameOver = false;
 let gameLoop;
@@ -32,7 +35,10 @@ class Character
 
     this.characterCollisionSphereMesh = null;
     this.keysBlocked = false;
-    
+
+    // Show loading screen when assets start loading
+    loadingScreen.style.display = "flex";
+
     const loader = new FBXLoader();
     loader.load("./objects/character.fbx", (fbx) => 
     {
@@ -168,8 +174,8 @@ class Character
   
             if(!gameOver) 
             {
-              this.characterPosition.z -= 10;
-              this.camera.position.z -= 10;
+              this.characterPosition.z -= 20;
+              this.camera.position.z -= 20;
   
               setTimeout(() => {
                 gameOver = true;
@@ -182,6 +188,8 @@ class Character
 
       // Update light position
       this.lightC.position.copy(this.characterPosition.clone().add(new THREE.Vector3(0, 10, 40)));
+
+      loadingScreen.style.display = "none";
     }
   }
 }
@@ -440,15 +448,8 @@ class Game
     // Create controls
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
-    this.assetsLoadedCallback = null;
-
     // Start the animation loop
     this.animate();
-  }
-
-  onAssetsLoaded(callback) 
-  {
-    this.assetsLoadedCallback = callback;
   }
 
   animate() 
@@ -480,9 +481,6 @@ class Game
 
 document.addEventListener("DOMContentLoaded", function()
 {
-  const btnStart = document.querySelector("#btn-start");
-  const startScreen = document.querySelector("#start-screen");
-
   btnStart.addEventListener("click", function()
   {
     oxygenBar.style.display = "block";
