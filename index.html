@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" href="img/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css">
     <title>Sofia's Stellar</title>
@@ -14,13 +14,23 @@
       <p>Loading...</p>
     </div>
 
-    <div id="start-screen">
-      <h1>Sofia's Stellar Game</h1>
-      <button id="btn-start">Start</button>
+    <div class="start-game">
+      <img class="start-img" src="img/start.png">
+
+      <div id="start-screen">
+        <h1>Sofia's Stellar Game</h1>
+        <button id="btn-start" role="button">Start</button>
+      </div>
     </div>
 
     <div id="oxygen-container">
+      <p class="oxygen-label">Oxygen:</p>
       <div id="oxygen-bar"></div>
+    </div>
+
+    <div id="score-container">
+      <p class="score-label">Score:</p>
+      <p class="score">0</p>
     </div>
 
     <script type="module" src="/main.js"></script>

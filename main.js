@@ -6,14 +6,18 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Selectors
 
-const oxygenBar = document.getElementById("oxygen-bar");
+const oxygenBar = document.querySelector("#oxygen-bar");
+const oxygenContainer = document.querySelector("#oxygen-container");
+const scoreContainer = document.querySelector("#score-container");
+const scoreLabel = document.querySelector(".score");
 const btnStart = document.querySelector("#btn-start");
-const startScreen = document.querySelector("#start-screen");
+const startScreen = document.querySelector(".start-game");
 const loadingScreen = document.querySelector("#loading-screen");
 
 let gameOver = false;
 let gameLoop;
-let oxygenBarWidth = 100;
+let oxygenBarWidth = 90;
+let score = 0;
 
 
 // Classes
@@ -113,6 +117,13 @@ class Character
         }
       });
     });
+
+    this.scoreInterval = setInterval(() => {
+      if (!gameOver) {
+        score++;
+        scoreLabel.textContent = score;
+      }
+    }, 1000);
   }
 
   update() 
@@ -144,7 +155,7 @@ class Character
         {
           console.log("Character intersects with an oxygen object");
           
-          oxygenBarWidth = 100;
+          oxygenBarWidth = 90;
           this.scene.remove(oxygen);
           this.oxygen.oxygens.splice(i, 1);
         }
@@ -170,6 +181,7 @@ class Character
           if(characterBoundingBox.intersectsBox(asteroidBoundingBox)) 
           {
             this.keysBlocked = true;
+            clearInterval(this.scoreInterval);
             console.log("Collision detected");
   
             if(!gameOver) 
@@ -483,7 +495,8 @@ document.addEventListener("DOMContentLoaded", function()
 {
   btnStart.addEventListener("click", function()
   {
-    oxygenBar.style.display = "block";
+    oxygenContainer.style.display = "flex";
+    scoreContainer.style.display = "flex"
     startScreen.style.display = "none";
 
     const game = new Game();
