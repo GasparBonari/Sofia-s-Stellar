@@ -6,13 +6,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Selectors
 
+const btnStart = document.querySelector("#btn-start");
+const startScreen = document.querySelector(".start-game");
+const loadingScreen = document.querySelector("#loading-screen");
 const oxygenBar = document.querySelector("#oxygen-bar");
 const oxygenContainer = document.querySelector("#oxygen-container");
 const scoreContainer = document.querySelector("#score-container");
 const scoreLabel = document.querySelector(".score");
-const btnStart = document.querySelector("#btn-start");
-const startScreen = document.querySelector(".start-game");
-const loadingScreen = document.querySelector("#loading-screen");
+const gameOverScreen = document.querySelector("#game-over-screen");
+const finalScore = document.querySelector(".final-score");
+const btnRestart = document.querySelector("#btn-restart");
 
 let gameOver = false;
 let gameLoop;
@@ -126,6 +129,12 @@ class Character
     }, 1000);
   }
 
+  gameOver()
+  {
+    gameOverScreen.style.display = "flex";
+    finalScore.textContent = score;
+  }
+
   update() 
   {
     if(this.character) 
@@ -169,6 +178,7 @@ class Character
       else 
       {
         gameOver = true;
+        this.gameOver();
       }
   
       // Check for collision with asteroids
@@ -180,8 +190,10 @@ class Character
   
           if(characterBoundingBox.intersectsBox(asteroidBoundingBox)) 
           {
+            this.gameOver();
             this.keysBlocked = true;
             clearInterval(this.scoreInterval);
+
             console.log("Collision detected");
   
             if(!gameOver) 
@@ -500,5 +512,10 @@ document.addEventListener("DOMContentLoaded", function()
     startScreen.style.display = "none";
 
     const game = new Game();
+  })
+
+  btnRestart.addEventListener("click", function()
+  {
+    window.location.reload();
   })
 })
