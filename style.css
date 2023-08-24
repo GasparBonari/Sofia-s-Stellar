@@ -150,9 +150,10 @@ html, body{
 }
 
 
-/*---Game Over---*/
+/*---Game Over and Win Screen---*/
 
-#game-over-screen{
+#game-over-screen,
+#win-screen{
   position: fixed;
   top: 0;
   left: 0;
@@ -168,7 +169,8 @@ html, body{
   text-align: center;
 }
 
-#game-over-screen h2{
+#game-over-screen h2,
+#win-screen h2{
   color: #f3f3f3;
   margin: 10px;
   font-size: 100px;
@@ -177,7 +179,8 @@ html, body{
   top: 1cm;
 }
 
-#game-over-screen p{
+#game-over-screen p,
+#win-screen p{
   font-size: 60px;
   color: white;
 }

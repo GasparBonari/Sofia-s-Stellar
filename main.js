@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
@@ -15,7 +14,9 @@ const scoreContainer = document.querySelector("#score-container");
 const scoreLabel = document.querySelector(".score");
 const gameOverScreen = document.querySelector("#game-over-screen");
 const finalScore = document.querySelector(".final-score");
-const btnRestart = document.querySelector("#btn-restart");
+const WinScreen = document.querySelector("#win-screen");
+const btnGameOverRestart = document.querySelector(".gameOver-restart");
+const btnWinRestart = document.querySelector(".win-restart");
 
 let gameOver = false;
 let gameLoop;
@@ -121,15 +122,24 @@ class Character
       });
     });
 
-    this.scoreInterval = setInterval(() => {
-      if (!gameOver) {
+    this.scoreInterval = setInterval(() => 
+    {
+      if (!gameOver) 
+      {
         score++;
         scoreLabel.textContent = score;
+
+        if(score >= 100)
+        {
+          gameOver = true;
+          WinScreen.style.display = "flex";
+          clearInterval(this.scoreInterval);
+        }
       }
     }, 1000);
   }
 
-  gameOver()
+  handleGameOver()
   {
     gameOverScreen.style.display = "flex";
     finalScore.textContent = score;
@@ -178,7 +188,7 @@ class Character
       else 
       {
         gameOver = true;
-        this.gameOver();
+        this.handleGameOver();
       }
   
       // Check for collision with asteroids
@@ -190,7 +200,7 @@ class Character
   
           if(characterBoundingBox.intersectsBox(asteroidBoundingBox)) 
           {
-            this.gameOver();
+            this.handleGameOver();
             this.keysBlocked = true;
             clearInterval(this.scoreInterval);
 
@@ -435,7 +445,6 @@ class Game
 
     // Create the camera
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    this.camera.position.z = 5;
 
     // Create the renderer
     this.renderer = new THREE.WebGLRenderer();
@@ -469,9 +478,6 @@ class Game
     // Add camera
     this.scene.add(this.camera);
 
-    // Create controls
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-
     // Start the animation loop
     this.animate();
   }
@@ -485,13 +491,10 @@ class Game
     this.sun.update();
     this.character.update();
 
-    // OrbitControls
-    this.controls.update();
-
     // Render the scene
     this.renderer.render(this.scene, this.camera);
 
-    if (gameOver) return;
+    if(gameOver) return;
 
     if(this.assetsLoadedCallback) 
     {
@@ -513,9 +516,14 @@ document.addEventListener("DOMContentLoaded", function()
 
     const game = new Game();
   })
+})
 
-  btnRestart.addEventListener("click", function()
-  {
-    window.location.reload();
-  })
+btnGameOverRestart.addEventListener("click", function()
+{
+  window.location.reload();
+})
+
+btnWinRestart.addEventListener("click", function()
+{
+  window.location.reload();
 })
