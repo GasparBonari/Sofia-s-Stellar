@@ -5,6 +5,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 // Selectors
 
+const btnInstructions = document.querySelector(".btn--open-modal");
+const btnCloseInstructions = document.querySelector(".btn--close-modal");
+const instructions = document.querySelector(".modal");
+const overlay = document.querySelector(".overlay")
 const btnStart = document.querySelector("#btn-start");
 const startScreen = document.querySelector(".start-game");
 const loadingScreen = document.querySelector("#loading-screen");
@@ -14,7 +18,7 @@ const scoreContainer = document.querySelector("#score-container");
 const scoreLabel = document.querySelector(".score");
 const gameOverScreen = document.querySelector("#game-over-screen");
 const finalScore = document.querySelector(".final-score");
-const WinScreen = document.querySelector("#win-screen");
+const winScreen = document.querySelector("#win-screen");
 const btnGameOverRestart = document.querySelector(".gameOver-restart");
 const btnWinRestart = document.querySelector(".win-restart");
 
@@ -132,7 +136,7 @@ class Character
         if(score >= 100)
         {
           gameOver = true;
-          WinScreen.style.display = "flex";
+          winScreen.style.display = "flex";
           clearInterval(this.scoreInterval);
         }
       }
@@ -518,12 +522,35 @@ document.addEventListener("DOMContentLoaded", function()
   })
 })
 
-btnGameOverRestart.addEventListener("click", function()
+btnGameOverRestart.addEventListener("click", () =>
 {
   window.location.reload();
 })
 
-btnWinRestart.addEventListener("click", function()
+btnWinRestart.addEventListener("click", () =>
 {
   window.location.reload();
+})
+
+btnInstructions.addEventListener("click", () =>
+{
+  overlay.classList.remove("hidden");
+  instructions.classList.remove("hidden");
+})
+
+function closeModal()
+{
+  overlay.classList.add("hidden");
+  instructions.classList.add("hidden");
+}
+
+btnCloseInstructions.addEventListener("click", closeModal);
+overlay.addEventListener("click", closeModal);
+
+document.addEventListener("keydown", (e) => 
+{
+  if(e.key === "Escape")
+  {
+    closeModal();
+  }
 })

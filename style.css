@@ -25,7 +25,6 @@ html, body{
   background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
   color: white;
-  z-index: 9999;
 }
 
 #btn-start{
@@ -69,6 +68,103 @@ html, body{
   height: auto;
 }
 
+
+/*---Instructions---*/
+
+.btn--open-modal {
+  position: absolute;
+  left: 10%;
+  top: 10%;
+  align-items: center;
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: #000;
+  cursor: pointer;
+  display: inline-flex;
+  fill: #000;
+  font-family: Inter,sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  height: 48px;
+  justify-content: center;
+  letter-spacing: -.8px;
+  line-height: 24px;
+  min-width: 140px;
+  outline: 0;
+  padding: 0 17px;
+  text-align: center;
+  text-decoration: none;
+  transition: all .3s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.btn--open-modal:hover {
+  border-color: #06f;
+  color: #06f;
+  fill: #06f;
+}
+
+.modal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	max-width: 60rem;
+	background-color: #f3f3f3;
+	padding: 5rem 6rem;
+	box-shadow: 0 4rem 6rem rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+	z-index: 9999;
+	transition: all 0.5s;
+}
+
+.modal > p{
+	display: flex;
+	justify-content: center;
+  text-align: center;
+  line-height: 40px;
+}
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	backdrop-filter: blur(5px);
+	z-index: 100;
+	transition: all 0.5s;
+}
+  
+.modal__header {
+	font-size: 3rem;
+	line-height: 1.5;
+  margin-left: 40px;
+}
+
+.btn--close-modal {
+	color: inherit;
+	position: absolute;
+	top: 0.5rem;
+	right: 2rem;
+	font-size: 4rem;
+	cursor: pointer;
+	border: none;
+	background: none;
+}
+
+.btn--close-modal:hover{
+	color: #00000074;
+}
+
+.hidden{
+  display: none;
+}
 
 /*---Loading Screen---*/
 
