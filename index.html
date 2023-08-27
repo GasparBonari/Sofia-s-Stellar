@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="img/favicon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <title>Sofia's Stellar</title>
+  </head>
+  <body>
+
+    <div id="loading-screen">
+      <div class="loading-icon"></div>
+      <p>Loading...</p>
+    </div>
+
+    <div class="start-game">
+      <img class="start-img" src="img/start.png">
+
+      <button class="btn--open-modal" role="button">Instructions</button>
+
+      <div class="modal hidden">
+          <button class="btn--close-modal">&times;</button>
+          <h2 class="modal__header">Welcome</h2>
+          <p>☄️ Help Sofia to avoid the asteroids ☄️<br>
+             ⌨️ Use the arrows to move around ⌨️<br>
+             👀 Keep an eye on the oxygen bar 👀<br>
+             🍾 Grab the blue bottles to get oxygen 🍾<br>
+             🏆 Win the game reaching 100 points 🏆<br><br>
+             🌠Good Luck!🌠
+          </p>
+      </div>
+      <div class="overlay hidden"></div>
+
+      <div id="start-screen">
+        <h1>Sofia's Stellar Game</h1>
+        <button id="btn-start" role="button">Start</button>
+      </div>
+    </div>
+
+    <div id="oxygen-container">
+      <p class="oxygen-label">Oxygen:</p>
+      <div id="oxygen-bar"></div>
+    </div>
+
+    <div id="score-container">
+      <p class="score-label">Score:</p>
+      <p class="score">0</p>
+    </div>
+
+    <div id="game-over-screen">
+      <h2>💀Game Over💀</h2>
+      <p>Your Score: <span class="final-score">0</span></p>
+      <button id="btn-restart" class="gameOver-restart">Restart</button>
+    </div>
+
+    <div id="win-screen">
+      <h2>🥇You Win🥇</h2>
+      <p>You reached: 💯</p>
+      <button id="btn-restart" class="win-restart">Restart</button>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>
