@@ -463,6 +463,31 @@ class Sun
   }
 }
 
+class BlackHole 
+{
+  constructor(scene) 
+  {
+    this.scene = scene;
+    this.blackHole = null;
+
+    const gltfSun = new GLTFLoader();
+    gltfSun.load("./objects/black-hole/blackHole.gltf", (gltf) => 
+    {
+      this.blackHole = gltf;
+      this.blackHole.scene.position.set(-300, -1000, 300);
+      this.blackHole.scene.rotation.x = Math.PI / 2;
+      this.blackHole.scene.scale.set(900, 600, 600);
+
+      this.scene.add(gltf.scene);
+    });
+  }
+
+  update() 
+  {
+    if(this.blackHole) this.blackHole.scene.rotation.y += 0.0001;
+  }
+}
+
 class Game 
 {
   constructor() 
@@ -500,6 +525,7 @@ class Game
     this.oxygen = new Oxygen(this.scene);
     this.stars = new Stars(this.scene, 1000);
     this.sun = new Sun(this.scene);
+    this.blackHole = new BlackHole(this.scene);
     this.character = new Character(this.scene, this.camera, this.oxygen, this.asteroids, lightC);
 
     // Add camera
@@ -516,6 +542,7 @@ class Game
     this.oxygen.update();
     this.stars.update();
     this.sun.update();
+    this.blackHole.update();
     this.character.update();
 
     // Render the scene
