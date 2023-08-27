@@ -40,6 +40,11 @@ class Character
     this.asteroids = asteroids;
     this.lightC = lightC;
 
+    this.cameraAngle = 0;
+    this.targetAngle = Math.PI;
+    this.cameraRotationSpeed = 2;
+    this.prevTime = performance.now(); 
+
     this.characterPosition = new THREE.Vector3(0, 0, 300);
     const initialBoxPosition = new THREE.Vector3(0, 12, 300);
     this.offset = initialBoxPosition.clone().sub(this.characterPosition);
@@ -103,21 +108,25 @@ class Character
           {
             this.characterPosition.x = Math.max(this.characterPosition.x - this.movementSpeed, minX);
             fbx.rotation.set(0, -Math.PI / 2, 0);
+            this.targetAngle = Math.PI / 2;
           } 
           else if(event.key === "ArrowRight") 
           {
             this.characterPosition.x = Math.min(this.characterPosition.x + this.movementSpeed, maxX);
             fbx.rotation.set(0, Math.PI / 2, 0);
+            this.targetAngle = -Math.PI / 2;
           } 
           else if(event.key === "ArrowUp") 
           {
             this.characterPosition.y = Math.min(this.characterPosition.y + this.movementSpeed, maxY);
             fbx.rotation.set(0, Math.PI, 0);
-          }
+            this.targetAngle = 0;
+          } 
           else if(event.key === "ArrowDown") 
           {
             this.characterPosition.y = Math.max(this.characterPosition.y - this.movementSpeed, minY);
             fbx.rotation.set(0, Math.PI, 0);
+            this.targetAngle = 0;
           }
       
           // Update character's position
@@ -155,10 +164,25 @@ class Character
     {
       this.character.update(0.01);
   
-      // Update camera's position to follow the character
-      const cameraOffset = new THREE.Vector3(0, 15, 20);
+      // Update camera position and lookAt
+      const cameraOffset = new THREE.Vector3(0, 25, 35).applyEuler(
+        new THREE.Euler(0, this.cameraAngle, 0)
+      );
       const cameraPosition = this.characterPosition.clone().add(cameraOffset);
       this.camera.position.copy(cameraPosition);
+      this.camera.lookAt(this.characterPosition);
+
+      // Calculate time since last frame
+      const currentTime = performance.now();
+      const deltaTime = (currentTime - this.prevTime) / 1000; // Convert to seconds
+      this.prevTime = currentTime;
+
+      // Smoothly interpolate camera angle towards the target angle
+      this.cameraAngle = THREE.MathUtils.lerp(
+        this.cameraAngle,
+        this.targetAngle,
+        this.cameraRotationSpeed * deltaTime
+      );
   
       // Calculate the updated position
       const updatedBoxPosition = this.characterPosition.clone().add(this.offset);
@@ -168,7 +192,6 @@ class Character
       const characterBoundingBox = new THREE.Box3().setFromObject(this.characterCollisionSphereMesh);
   
       // Check for collision
-
       for(let i = this.oxygen.oxygens.length - 1; i >= 0; i--) 
       {
         const oxygen = this.oxygen.oxygens[i];
