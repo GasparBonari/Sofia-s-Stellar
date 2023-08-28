@@ -57,7 +57,7 @@ class Character
     loadingScreen.style.display = "flex";
 
     const loader = new FBXLoader();
-    loader.load("./objects/character.fbx", (fbx) => 
+    loader.load("./public/objects/character.fbx", (fbx) => 
     {
       fbx.scale.setScalar(0.1);
       fbx.traverse(e => {
@@ -67,7 +67,7 @@ class Character
   
       // flaoting animation
       const animLoaderFloating = new FBXLoader();
-      animLoaderFloating.load("./objects/floating.fbx", (animationData) => 
+      animLoaderFloating.load("./public/objects/floating.fbx", (animationData) => 
       {
         this.character = new THREE.AnimationMixer(fbx);
         const idle = this.character.clipAction(animationData.animations[0]);
@@ -263,7 +263,7 @@ class Asteroids
     this.asteroids = [];
 
     const gltfAsteroid = new GLTFLoader();
-    gltfAsteroid.load("./objects/asteroid/asteroid.gltf", (gltf1) => 
+    gltfAsteroid.load("./public/objects/asteroid/asteroid.gltf", (gltf1) => 
     {
       this.asteroid = gltf1;
 
@@ -380,7 +380,7 @@ class Oxygen
     this.oxygens = [];
 
     const gltfNewObject = new GLTFLoader();
-    gltfNewObject.load("./objects/oxigen/oxigen.gltf", (gltf2) => 
+    gltfNewObject.load("./public/objects/oxigen/oxigen.gltf", (gltf2) => 
     {
       this.oxygen = gltf2;
       this.oxygen.scene.scale.set(0.02, 0.02, 0.02);
@@ -445,7 +445,7 @@ class Sun
     this.sun = null;
 
     const gltfSun = new GLTFLoader();
-    gltfSun.load("./objects/sun/sun.gltf", (gltf) => 
+    gltfSun.load("./public/objects/sun/sun.gltf", (gltf) => 
     {
       this.sun = gltf;
       this.sun.scene.position.y = 50;
@@ -471,7 +471,7 @@ class BlackHole
     this.blackHole = null;
 
     const gltfSun = new GLTFLoader();
-    gltfSun.load("./objects/black-hole/blackHole.gltf", (gltf) => 
+    gltfSun.load("./public/objects/black-hole/blackHole.gltf", (gltf) => 
     {
       this.blackHole = gltf;
       this.blackHole.scene.position.set(-300, -1000, 300);
