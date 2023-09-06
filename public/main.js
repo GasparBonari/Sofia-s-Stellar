@@ -24,6 +24,7 @@ const btnWinRestart = document.querySelector(".win-restart");
 
 let gameOver = false;
 let gameLoop;
+let scoreInterval;
 let oxygenBarWidth = 90;
 let score = 0;
 
@@ -134,22 +135,6 @@ class Character
         }
       });
     });
-
-    this.scoreInterval = setInterval(() => 
-    {
-      if (!gameOver) 
-      {
-        score++;
-        scoreLabel.textContent = score;
-
-        if(score >= 100)
-        {
-          gameOver = true;
-          winScreen.style.display = "flex";
-          clearInterval(this.scoreInterval);
-        }
-      }
-    }, 1000);
   }
 
   handleGameOver()
@@ -229,7 +214,7 @@ class Character
           {
             this.handleGameOver();
             this.keysBlocked = true;
-            clearInterval(this.scoreInterval);
+            clearInterval(scoreInterval);
 
             console.log("Collision detected");
   
@@ -569,6 +554,22 @@ document.addEventListener("DOMContentLoaded", function()
     startScreen.style.display = "none";
 
     const game = new Game();
+
+    scoreInterval = setInterval(() => 
+    {
+      if(!gameOver && loadingScreen.style.display == "none") 
+      {
+        score++;
+        scoreLabel.textContent = score;
+
+        if(score >= 100)
+        {
+          gameOver = true;
+          winScreen.style.display = "flex";
+          clearInterval(scoreInterval);
+        }
+      }
+    }, 1000);
   })
 })
 
