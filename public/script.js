@@ -1,15 +1,17 @@
 import * as THREE from 'three';
 
+// Specifications for stars
 const particles = 5000;
 const speed = 40;
 const dim = 200;
+let vertices = [];
 
 const canvas = document.getElementById('canvas');
 const renderer = new THREE.WebGLRenderer({canvas, preserveDrawingBuffer: true, alpha: true});
 renderer.autoClearColor = false;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(90, canvas.width/canvas.height, 0.1, 1000);
-var vertices = [];
+
 
 for(let i = 0; i < particles; i++) 
 {
@@ -20,6 +22,7 @@ for(let i = 0; i < particles; i++)
 	vertices.push( x, y, z );
 }
 
+// Creating particles object
 const starGeo = new THREE.BufferGeometry();
 starGeo.setAttribute('position', new THREE.Float32BufferAttribute( vertices, 3 ));
 
@@ -29,14 +32,13 @@ let starMat = new THREE.PointsMaterial({
 	transparent: true,
 	depthTest: false
 });
+
 const starPoints = new THREE.Points( starGeo, starMat );
-
-
 const fadeGeo = new THREE.PlaneGeometry(1, 1);
 const fadeMat = new THREE.MeshBasicMaterial({
 	color: 0x000000,
 	transparent: true,
-	opacity: .4,
+	opacity: 0.4,
 })
 
 const fadePlate = new THREE.Mesh(fadeGeo, fadeMat);
@@ -47,7 +49,8 @@ scene.add(fadePlate);
 scene.add(starPoints);
 requestAnimationFrame(draw);
 
-function draw() 
+// Draw particles on canvas
+function draw()
 {
 	if(canvas.height !== canvas.clientHeight || canvas.width !== canvas.clientWidth)
     {

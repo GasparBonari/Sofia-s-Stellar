@@ -196,7 +196,7 @@ class Character
       {
         oxygenBarWidth -= 0.01;
         oxygenBar.style.width = oxygenBarWidth + "%";
-      } 
+      }
       else 
       {
         gameOver = true;
@@ -220,8 +220,8 @@ class Character
   
             if(!gameOver) 
             {
-              this.characterPosition.z -= 20;
-              this.camera.position.z -= 20;
+              this.characterPosition.z -= 100;
+              this.camera.position.z -= 100;
   
               setTimeout(() => {
                 gameOver = true;
@@ -459,17 +459,30 @@ class BlackHole
     gltfSun.load("./objects/black-hole/blackHole.gltf", (gltf) => 
     {
       this.blackHole = gltf;
-      this.blackHole.scene.position.set(-300, -1000, 300);
-      this.blackHole.scene.rotation.x = Math.PI / 2;
-      this.blackHole.scene.scale.set(900, 600, 600);
+      this.blackHole.scene.position.set(0, -200, 300);
+      this.blackHole.scene.scale.set(200, 200, 200);
 
       this.scene.add(gltf.scene);
+
+      // Brightness by increasing emissive intensity
+      const emissiveIntensity = 5;
+
+      this.blackHole.scene.traverse((child) => 
+      {
+        if(child.isMesh) 
+        {
+          if(child.material.emissive !== undefined) 
+          {
+            child.material.emissiveIntensity = emissiveIntensity;
+          }
+        }
+      });
     });
   }
 
   update() 
   {
-    if(this.blackHole) this.blackHole.scene.rotation.y += 0.0001;
+    if(this.blackHole) this.blackHole.scene.rotation.z += 0.003;
   }
 }
 
@@ -545,6 +558,7 @@ class Game
   }
 }
 
+// Event listeners for hanlding buttons
 document.addEventListener("DOMContentLoaded", function()
 {
   btnStart.addEventListener("click", function()
