@@ -42,7 +42,7 @@ class Character
     this.lightC = lightC;
 
     this.cameraAngle = 0;
-    this.targetAngle = Math.PI;
+    this.targetAngle = 0;
     this.cameraRotationSpeed = 2;
     this.prevTime = performance.now(); 
 
@@ -129,11 +129,24 @@ class Character
             fbx.rotation.set(0, Math.PI, 0);
             this.targetAngle = 0;
           }
+          else if (event.key === "Shift") 
+          {
+            this.targetAngle = Math.PI;
+          }
       
           // Update character's position
           fbx.position.copy(this.characterPosition);
         }
       });
+    });
+
+    // Getting the angle of camera back when key shift is released
+    document.addEventListener("keyup", (event) => 
+    {
+      if (!this.keysBlocked && event.key === "Shift") 
+      {
+        this.targetAngle = 0;
+      }
     });
   }
 
