@@ -326,3 +326,24 @@ html, body{
 #btn-restart:active {
   opacity: .5;
 }
+
+
+/*---Media Queries---*/
+
+@media screen and (min-width: 768px) 
+{
+  .start-img {
+    max-width: 30%;
+  }
+
+  .modal{
+    padding: 3rem 2rem;
+  }
+}
+
+@media screen and (max-width: 767px) 
+{
+  .start-img {
+    max-width: 20%;
+  }
+}

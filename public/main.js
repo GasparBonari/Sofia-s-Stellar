@@ -49,7 +49,7 @@ class Character
     this.characterPosition = new THREE.Vector3(0, 0, 300);
     const initialBoxPosition = new THREE.Vector3(0, 12, 300);
     this.offset = initialBoxPosition.clone().sub(this.characterPosition);
-    this.movementSpeed = 1.5;
+    this.movementSpeed = 1;
 
     this.characterCollisionSphereMesh = null;
     this.keysBlocked = false;
