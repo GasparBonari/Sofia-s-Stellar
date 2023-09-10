@@ -47,7 +47,7 @@ Follow these steps to install and run Sofia's Stellar on your system:
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/yourusername/sofias-stellar.git
+   git clone https://github.com/yourusername/Sofias-s-Stellar
 
 2. **Install required files**
    npm install
