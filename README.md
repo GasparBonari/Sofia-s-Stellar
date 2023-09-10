@@ -1,6 +1,6 @@
 # Sofia's Stellar - A 3D Game
 
-![Sofia's Stellar Banner](public/img/start.png)
+<img src="public/img/start.png" alt="Sofia's Stellar Banner" width="500" height="500">
 
 Welcome to Sofia's Stellar, an immersive 3D game developed with Three.js.
 
